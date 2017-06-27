@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -22,11 +23,19 @@ public class Test1 {
     	// Optional, if not specified, WebDriver will search your path for chromedriver.
     	//System.setProperty("webdriver.chrome.driver", "C:/path/to/chromedriver.exe");
     	
-    	//force English as Chrome language
     	ChromeOptions options = new ChromeOptions();
+    	//force English as Chrome language
     	options.addArguments("--lang=en");
+    	//disable popup-blocker
+    	options.addArguments("--disable-popup-blocking");
+    	//disable window animations
+    	options.addArguments("--wm-window-animations-disabled");
+    	//move window off screen
+    	options.addArguments("--window-position=-32000,-32000");
     	
-        driver = new ChromeDriver(options);
+    	DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    	capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        driver = new ChromeDriver(capabilities);
     }
  
     @AfterClass
@@ -39,7 +48,7 @@ public class Test1 {
  
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
  
-        driver.get("https://www.google.com");
+        driver.get("https://www.google.com/?hl=en");
  
         String search_text = "Google Search";
         WebElement search_button = driver.findElement(By.name("btnK"));
